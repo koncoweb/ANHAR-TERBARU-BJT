@@ -131,6 +131,7 @@ function App() {
         <div className="min-h-screen bg-bjt-background pt-16 pb-16 sm:pb-0">
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/"
               element={

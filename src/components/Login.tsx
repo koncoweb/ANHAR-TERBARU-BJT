@@ -56,17 +56,15 @@ export default function Login() {
   }, []);
 
   // Real-time validation
-  useEffect(() => {
-    if (username && username.trim().length < 3) {
-      setUsernameError("Username minimal 3 karakter");
-    } else {
-      setUsernameError("");
-    }
-  }, [username]);
+  useEffect(() => { if (username && username.trim().length < 3) { setUsernameError("Username minimal 3 karakter"); } else if (username && !/^[a-zA-Z0-9_]+$/.test(username)) { setUsernameError("Username hanya boleh mengandung huruf, angka, dan underscore"); } else { setUsernameError(""); } }, [username]);
 
   useEffect(() => {
     if (password && password.trim().length < 6) {
       setPasswordError("Password minimal 6 karakter");
+    } else if (password && !/[A-Z]/.test(password)) {
+      setPasswordError("Password harus mengandung minimal 1 huruf besar");
+    } else if (password && !/[0-9]/.test(password)) {
+      setPasswordError("Password harus mengandung minimal 1 angka");
     } else {
       setPasswordError("");
     }
@@ -77,13 +75,23 @@ export default function Login() {
     setError("");
 
     // Final validation before submission
-    if (!username.trim() || !password.trim()) {
-      setError("Username dan password harus diisi");
+    if (!username.trim()) {
+      setError("Username harus diisi");
       return;
     }
 
-    if (usernameError || passwordError) {
-      setError("Mohon perbaiki error pada form");
+    if (!password.trim()) {
+      setError("Password harus diisi");
+      return;
+    }
+
+    if (usernameError) {
+      setError(usernameError);
+      return;
+    }
+
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -131,14 +139,14 @@ export default function Login() {
             Welcome to BJT Finance App. Please login to continue.
           </p>
 
-          <Button
-            onClick={() => setShowLoginForm(true)}
-            className="bg-yellow-400 hover:bg-yellow-500 text-bjt-primary font-bold py-3 px-8 rounded-md text-lg w-32"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Login
-          </Button>
+          <div className="flex flex-col space-y-4 items-center">
+            <Button onClick={() => setShowLoginForm(true)} className="bg-yellow-400 hover:bg-yellow-500 text-bjt-primary font-bold py-3 px-8 rounded-md text-lg w-32" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              Login
+            </Button>
+            <Button onClick={() => navigate('/register')} className="bg-white hover:bg-gray-100 text-bjt-primary font-bold py-3 px-8 rounded-md text-lg w-32 border border-bjt-primary" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              Register
+            </Button>
+          </div>
         </motion.div>
       </div>
     );
